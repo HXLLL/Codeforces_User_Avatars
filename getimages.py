@@ -38,13 +38,12 @@ class Worker(threading.Thread):
         do_with_username(username)
         create_new_worker()
         return 0
-if __name__ == '__main__':
-    f = open("username","r")
-    if not os.path.exists("images"):
-        os.makedirs("images")
-    max_connections = 12
-    if len(sys.argv) == 2:
-        max_connections = int(sys.argv[1])
-    for i in range(max_connections):
-        create_new_worker()
-    time.sleep(10)
+
+f = open("username","r")
+if not os.path.exists("images"):
+    os.makedirs("images")
+max_connections = 12
+if len(sys.argv) == 2:
+    max_connections = int(sys.argv[1])
+for i in range(max_connections):
+    create_new_worker()
