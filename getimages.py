@@ -6,13 +6,17 @@ import re
 
 image_urlformat = 'http://codeforces.com/userphoto/title/%s/photo.jpg'
 
+stdout_lock = threading.Lock()
+file_lock = threading.Lock()
+
 cnt = 0
 def do_with_username(username):
     global cnt
+    stdout_lock.acquire()
     cnt += 1
     print "fetching user%d: %s's Avatar" % (cnt, username)
+    stdout_lock.release()
     os.system('wget "%s" --quiet --output-document="%s"' % (image_urlformat % username, './images/%s.jpg' % username))
-    time.sleep(0.1)
 
 def create_new_worker():
     worker = Worker()
@@ -26,7 +30,9 @@ class Worker(threading.Thread):
     def run(self):
         #print "i'm running!"
         time.sleep(0.05)
+        file_lock.acquire()
         username = f.readline().strip('\n')
+        file_lock.release()
         if username == '':
             return 0
         do_with_username(username)
