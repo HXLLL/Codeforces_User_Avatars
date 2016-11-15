@@ -23,7 +23,6 @@ class Worker(threading.Thread):
         if (self.page_cnt > MAX_PAGE):
             return
         print_lock.acquire()
-        print 'processing page %d...' % self.page_cnt
         print_lock.release()
         r = requests.get(urlformat % self.page_cnt)
         user_data = re.findall(pattern, r.text)
@@ -33,6 +32,7 @@ class Worker(threading.Thread):
             output_lock.acquire()
             usernames.append(username)
             output_lock.release()
+        print 'processed page %d...' % self.page_cnt
 
         new_worker()
 
